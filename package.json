@@ -14,6 +14,7 @@
     "@fontsource/aref-ruqaa-ink": "^5.3.0",
     "@fontsource/cormorant-garamond": "^5.2.8",
     "@fontsource/italianno": "^5.2.7",
+    "@fontsource/lora": "^5.3.0",
     "@fontsource/noto-naskh-arabic": "^5.3.0",
     "framer-motion": "14.0.0",
     "next": "16.4.0",

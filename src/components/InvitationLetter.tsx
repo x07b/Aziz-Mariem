@@ -1,26 +1,18 @@
+"use client";
+import { invitationNames, eventConfig } from "@/config/event";
 import { Branch, Flourish } from "./Ornaments";
 import { Reveal } from "./Reveal";
+import { TypedText } from "./TypedText";
+import { useInvitation } from "./InvitationLanguage";
 
 export function InvitationLetter() {
-  return (
-    <section className="invitation-letter paper" id="invitation" aria-label="نص الدعوة">
-      <Branch className="letter-botanical botanical-left" />
-      <Branch className="letter-botanical botanical-right" />
-      <div className="letter-content">
-        <Reveal><Flourish/></Reveal>
-        <div className="invitation-arabic" lang="ar" dir="rtl">
-          <Reveal><p>في الحياة، فما لحظات تعدّي… وفما لحظات تبقى محفورة في القلب.</p></Reveal>
-          <Reveal><p>ونهار خطوبتنا بالنسبة لينا موش كان مناسبة، هو بداية فصل جديد من حكاية اخترنا نكمّلوها مع بعضنا.</p></Reveal>
-          <Reveal><p>نحمدوا ربي على اللي جمع بين قلوبنا، وعلى الخطوة الجديدة اللي باش نبدّاوها مع بعضنا.</p></Reveal>
-          <Reveal><p>وأحلى حاجة في الفرحة، إنها تتقسم مع الناس اللي نحبّوهم… على خاطر هكّا حبّيناكم تكونوا معانا، تشاركونا الضحكة، اللمة، وأول خطوة رسمية في حكايتنا.</p></Reveal>
-          <Reveal><p className="invitation-emphasis">وجودكم بيناتنا موش مجرد حضور… وجودكم جزء من فرحتنا.</p></Reveal>
-        </div>
-        <Reveal className="letter-signoff"><p className="arabic-signoff" lang="ar" dir="rtl">عزيز و مريم</p>
-        <Flourish />
-        <a className="text-link meta arabic-ui" href="#details" lang="ar" dir="rtl">
-          تفاصيل المناسبة <span aria-hidden="true">↓</span>
-        </a></Reveal>
-      </div>
-    </section>
-  );
+  const { t, dateText } = useInvitation();
+  return <section className="invitation-letter paper" id="invitation" aria-labelledby="announcement-heading">
+    <Branch className="letter-botanical botanical-left"/><Branch className="letter-botanical botanical-right"/>
+    <div className="letter-content bilingual-letter reading-surface">
+      <Reveal><Flourish/><h1 className="announcement" id="announcement-heading"><TypedText text={t.announcement}/></h1></Reveal>
+      <Reveal><p className="invitation-introduction"><TypedText text={t.introduction}/></p><time className="invitation-date" dateTime={eventConfig.event.date || undefined}><TypedText text={dateText}/></time></Reveal>
+      <Reveal className="letter-signoff"><p className="script letter-names"><TypedText text={invitationNames}/></p></Reveal>
+    </div>
+  </section>;
 }

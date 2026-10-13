@@ -1,14 +1,17 @@
 "use client";
+import { TypedText } from "./TypedText";
 
 import { useEffect, useState } from "react";
 import { eventConfig } from "@/config/event";
 import { getCountdown } from "@/lib/date";
 import { Flourish } from "./Ornaments";
 import { Reveal } from "./Reveal";
+import { useInvitation } from "./InvitationLanguage";
 
 export function Countdown() {
   const [countdown, setCountdown] = useState<ReturnType<typeof getCountdown>>(null);
-  const labels = { days: "أيام", hours: "ساعات", minutes: "دقائق", seconds: "ثوانٍ" };
+  const { t } = useInvitation();
+  const labels = t.units;
 
   useEffect(() => {
     const update = () => setCountdown(getCountdown(eventConfig.event.date));
@@ -19,23 +22,23 @@ export function Countdown() {
 
   return (
     <section className="countdown section-pad" aria-labelledby="countdown-heading">
-      <Reveal>
-        <Flourish />
-        <h2 className="arabic-ui section-title" id="countdown-heading" lang="ar" dir="rtl">العدّ التنازلي</h2>
+      <Reveal className="reading-surface">
+        <h2 className="section-title" id="countdown-heading"><TypedText text={t.countdown}/></h2>
         <div
           className="countdown-grid"
           role="timer"
-          aria-label={countdown ? `${countdown.days} أيام، ${countdown.hours} ساعات، ${countdown.minutes} دقائق، ${countdown.seconds} ثوانٍ متبقية` : "العدّ التنازلي غير متاح"}
+          aria-label={countdown ? `${countdown.days} ${labels.days}, ${countdown.hours} ${labels.hours}, ${countdown.minutes} ${labels.minutes}, ${countdown.seconds} ${labels.seconds} ${t.remaining}` : t.pending}
         >
           {(["days", "hours", "minutes", "seconds"] as const).map((unit) => (
             <div key={unit}>
               <span className="countdown-number">
                 {countdown ? String(countdown[unit]).padStart(unit === "days" ? 3 : 2, "0") : "—"}
               </span>
-              <span className="meta arabic-ui" lang="ar" dir="rtl">{labels[unit]}</span>
+              <span className="meta"><TypedText text={labels[unit]}/></span>
             </div>
           ))}
         </div>
+        {countdown?.complete && <p className="countdown-note"><TypedText text={t.begun}/></p>}
         <Flourish />
       </Reveal>
     </section>

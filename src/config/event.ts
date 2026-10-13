@@ -11,8 +11,8 @@ export const eventConfig = {
   storytelling: {
     bismillah: "بِسْمِ اللهِ الرَّحْمَنِ الرَّحِيمِ",
     verse: "﴿ وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنْفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً ﴾",
-    scene: "/images/doorway-scene.webp",
-    sceneAlt: "تصوّر لعزيز ببدلة زرقاء داكنة ومريم بحجاب وفستان عاجي، من الخلف أمام مدخل أنيق، وذيل الفستان يمتدّ إلى الدعوة",
+    scene: "/images/doorway-scene-beige.webp",
+    sceneAlt: "Aziz in beige and Mariem in an ivory gown and hijab, holding hands before an ornate doorway.",
     fabric: "/images/ivory-fabric.webp",
   },
   event: {
@@ -53,7 +53,7 @@ export const eventConfig = {
   dressCode: {
     description: "Our colours for the evening.",
     note: "",
-    colors: [{ name: "Aziz · Marine blue", hex: "#263c50" }, { name: "Mariem · Beige", hex: "#d8cbb4" }],
+    colors: [{ name: "Aziz · Beige", hex: "#c5b298" }, { name: "Mariem · Ivory", hex: "#e9dfcd" }],
   },
   smallNote: { enabled: true, title: "A Small Note", text: "Your presence is the most meaningful gift to us. We simply can’t wait to celebrate this special moment together." },
   rsvp: {
@@ -64,3 +64,36 @@ export const eventConfig = {
   },
 };
 export const coupleNames = `${eventConfig.couple.firstPerson} & ${eventConfig.couple.secondPerson}`;
+export const invitationNames = `${eventConfig.couple.secondPerson} & ${eventConfig.couple.firstPerson}`;
+export type InvitationLanguage = "fr" | "en";
+const { firstPerson: aziz, secondPerson: mariem } = eventConfig.couple;
+export const invitationCopy = {
+  fr: {
+    locale: "fr-FR", coverSubtitle: "Fête de fiançailles", enter: "Ouvrir l’invitation", close: "Refermer l’invitation",
+    announcement: `C'est officiel ! ${mariem} et ${aziz} se fiancent !`,
+    introduction: "On adorerait fêter cette magnifique étape avec vous",
+    journey: "Deux cœurs, une même histoire...",
+    invitation: `${mariem} & ${aziz} sont heureux de vous inviter à partager leur bonheur à l'occasion de leurs fiançailles.`,
+    withLove: "Avec amour", details: "Les détails", occasion: "Notre célébration", dateTime: "La date & l’heure", place: "Le lieu", maps: "Voir l’itinéraire", mapTitle: "Lieu des fiançailles à Jbal Lahmar, Tunis",
+    evening: "Au fil de la soirée", timeline: "Nos beaux moments", countdown: "Chaque instant nous rapproche",
+    units: { days: "Jours", hours: "Heures", minutes: "Minutes", seconds: "Secondes" }, remaining: "avant notre célébration", pending: "À annoncer", begun: "Notre nouveau chapitre a commencé.",
+    moments: { Welcome: "Bienvenue", Khotba: "Fiançailles", Photos: "Souvenirs en images", Celebrate: "Célébrons ensemble" } as Record<string,string>,
+    scene: "Un nouveau chapitre", sceneAlt: "Aziz en costume beige et Mariem en robe ivoire et hijab, main dans la main devant une porte sculptée. La traîne se prolonge sous l’invitation.",
+    scroll: "L’histoire se déroule", childhood: "Nos souvenirs d’enfance", azizPhoto: `${aziz}, enfant`, mariemPhoto: `${mariem}, enfant`,
+    musicPlay: "Activer la musique", musicMute: "Couper la musique", musicUnavailable: "Musique indisponible", switchLanguage: "Read the invitation in English",
+  },
+  en: {
+    locale: "en-GB", coverSubtitle: "Our engagement celebration", enter: "Open the invitation", close: "Close the invitation",
+    announcement: `It's official! ${mariem} and ${aziz} are getting engaged!`,
+    introduction: "We would love to celebrate this wonderful milestone with you on",
+    journey: "Two hearts, one journey...",
+    invitation: `${mariem} & ${aziz} are thrilled to invite you to share in their happiness as they celebrate their engagement.`,
+    withLove: "With love", details: "The details", occasion: "Our celebration", dateTime: "The date & time", place: "The place", maps: "Open in Maps", mapTitle: "Engagement location in Jbal Lahmar, Tunis",
+    evening: "As the evening unfolds", timeline: "Our beautiful moments", countdown: "Every moment brings us closer",
+    units: { days: "Days", hours: "Hours", minutes: "Minutes", seconds: "Seconds" }, remaining: "until our celebration", pending: "To be announced", begun: "Our beautiful new chapter has begun.",
+    moments: { Welcome: "Welcome", Khotba: "Engagement", Photos: "Making memories", Celebrate: "Celebrate together" } as Record<string,string>,
+    scene: "A beautiful beginning", sceneAlt: "Aziz in a beige suit and Mariem in an ivory gown and hijab, holding hands before a carved doorway. Her train flows beneath the invitation.",
+    scroll: "Let the story unfold", childhood: "Our childhood memories", azizPhoto: `${aziz} as a child`, mariemPhoto: `${mariem} as a child`,
+    musicPlay: "Play music", musicMute: "Mute music", musicUnavailable: "Music unavailable", switchLanguage: "Lire l’invitation en français",
+  },
+};

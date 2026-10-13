@@ -1,9 +1,11 @@
 "use client";
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { eventConfig } from "@/config/event";
+import { useInvitation } from "./InvitationLanguage";
 export type MusicHandle = { play: () => void };
 export const MusicPlayer = forwardRef<MusicHandle, { cover: boolean; onToggle?: (paused: boolean) => void }>(function MusicPlayer({ cover, onToggle }, ref) {
   const audio = useRef<HTMLAudioElement>(null);
+  const { t } = useInvitation();
   const animation = useRef(0);
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(false);
@@ -58,9 +60,9 @@ export const MusicPlayer = forwardRef<MusicHandle, { cover: boolean; onToggle?: 
         onClick={toggle}
         type="button"
         disabled={unavailable}
-        aria-label={unavailable ? "الموسيقى غير متاحة" : muted ? "إلغاء كتم الموسيقى" : playing ? "كتم الموسيقى" : "تشغيل الموسيقى"}
+        aria-label={unavailable ? t.musicUnavailable : playing && !muted ? t.musicMute : t.musicPlay}
         aria-pressed={playing && !muted}
-        title={unavailable ? "الموسيقى غير متاحة" : muted ? "إلغاء كتم الموسيقى" : playing ? "كتم الموسيقى" : "تشغيل الموسيقى"}
+        title={unavailable ? t.musicUnavailable : playing && !muted ? t.musicMute : t.musicPlay}
       >
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.1" aria-hidden="true">
           <path d="M10 17V6l9-2v11M10 9l9-2" />

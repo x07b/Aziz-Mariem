@@ -1,4 +1,5 @@
 "use client";
+import { TypedText } from "./TypedText";
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, MotionConfig } from "framer-motion";
 import { IntroEnvelope } from "./IntroEnvelope";
@@ -10,7 +11,13 @@ import { DetailsSection } from "./DetailsSection";
 import { Timeline } from "./Timeline";
 import { Monogram } from "./Ornaments";
 import { GownStory } from "./GownStory";
+import { InvitationLanguageProvider, LanguageSwitch, useInvitation } from "./InvitationLanguage";
+
 export function InvitationExperience() {
+  return <InvitationLanguageProvider><Experience/></InvitationLanguageProvider>;
+}
+function Experience() {
+  const { t, language } = useInvitation();
   const [entered, setEntered] = useState(false);
   const [unlocked, setUnlocked] = useState(false);
   const [mediaPaused, setMediaPaused] = useState(false);
@@ -26,5 +33,16 @@ export function InvitationExperience() {
     setUnlocked(false);
     setEntered(false);
   }
-  return <MotionConfig reducedMotion="user"><MusicPlayer ref={music} cover={!entered} onToggle={setMediaPaused}/><AnimatePresence onExitComplete={()=>{setUnlocked(true); invitation.current?.focus({preventScroll:true});}}>{!entered && <IntroEnvelope mediaPaused={mediaPaused} key="intro" onOpen={()=>music.current?.play()} onComplete={()=>setEntered(true)}/>}</AnimatePresence><div ref={invitation} tabIndex={-1} className="site-content" inert={!entered} aria-hidden={!entered}><main><GownStory entered={entered} footer={<footer className="site-footer"><Monogram/><button type="button" className="close-invitation meta arabic-ui" onClick={closeInvitation} lang="ar" dir="rtl">إغلاق الدعوة <span aria-hidden="true">↑</span></button></footer>}><InvitationLetter/><CoupleStory/><DetailsSection/><Timeline/><Countdown/></GownStory></main></div></MotionConfig>;
+  return <MotionConfig reducedMotion="user">
+    <LanguageSwitch/>
+    <MusicPlayer ref={music} cover={!entered} onToggle={setMediaPaused}/>
+    <AnimatePresence onExitComplete={()=>{setUnlocked(true); invitation.current?.focus({preventScroll:true});}}>
+      {!entered && <IntroEnvelope mediaPaused={mediaPaused} key="intro" onOpen={()=>music.current?.play()} onComplete={()=>setEntered(true)}/>}
+    </AnimatePresence>
+    <div ref={invitation} tabIndex={-1} className="site-content" lang={language} inert={!entered} aria-hidden={!entered}>
+      <main><GownStory entered={entered} footer={<footer className="site-footer"><Monogram/><button type="button" className="close-invitation meta" onClick={closeInvitation}><TypedText text={t.close}/><span aria-hidden="true">↑</span></button></footer>}>
+        <InvitationLetter/><CoupleStory/><DetailsSection/><Timeline/><Countdown/>
+      </GownStory></main>
+    </div>
+  </MotionConfig>;
 }
