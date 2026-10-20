@@ -8,11 +8,11 @@ export function InvitationLanguageProvider({ children }: { children: ReactNode }
   const [language, setLanguage] = useState<InvitationLanguage>("fr");
   useEffect(() => {
     const timer = setTimeout(() => {
-      try { const saved = localStorage.getItem("invitation-language"); if (saved === "en" || saved === "fr") setLanguage(saved); } catch { /* Language switching works without storage. */ }
+      try { const saved = localStorage.getItem("invitation-language"); if (saved === "en" || saved === "fr" || saved === "ar") setLanguage(saved); } catch { /* Language switching works without storage. */ }
     }, 0);
     return () => clearTimeout(timer);
   }, []);
-  useEffect(() => { document.documentElement.lang = language; document.documentElement.dir = "ltr"; }, [language]);
+  useEffect(() => { document.documentElement.lang = language; document.documentElement.dir = language === "ar" ? "rtl" : "ltr"; }, [language]);
   function choose(next: InvitationLanguage) {
     setLanguage(next);
     try { localStorage.setItem("invitation-language", next); } catch { /* Optional preference persistence. */ }
@@ -30,7 +30,12 @@ export function useInvitation() {
 }
 export function LanguageSwitch() {
   const { language, setLanguage, t } = useInvitation();
-  return <button className="language-switch" type="button" onClick={()=>setLanguage(language === "fr" ? "en" : "fr")} aria-label={t.switchLanguage} title={t.switchLanguage}>
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" aria-hidden="true"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18M5 7h14M5 17h14"/></svg><span>{language.toUpperCase()}</span>
+  const next = { fr: "ar", ar: "en", en: "fr" } as const;
+  return <button type="button" className="language-switch" onClick={() => setLanguage(next[language])}
+    aria-label={t.switchLanguage} title={t.languageStatus}>
+    <svg key={language} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" aria-hidden="true">
+      <circle cx="12" cy="12" r="8.5"/><ellipse cx="12" cy="12" rx="3.6" ry="8.5"/><path d="M3.5 12h17M5.4 7.5h13.2M5.4 16.5h13.2"/>
+    </svg>
+    <span className="control-tooltip" role="status">{t.languageStatus}</span>
   </button>;
 }

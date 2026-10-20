@@ -1,14 +1,10 @@
 "use client";
-import { motion, useReducedMotion } from "framer-motion";
+import { useReducedMotion } from "@/lib/useReducedMotion";
+import { motion } from "framer-motion";
 
-/** Reserve the complete text layout while letters appear, without shifting content. */
+/** Reveal whole phrases so Arabic joining and natural word wrapping stay intact. */
 export function TypedText({ text }: { text: string }) {
   const reduced = useReducedMotion();
-  let character = 0;
-  return <span className="typed-text" aria-label={text}><motion.span key={text} aria-hidden="true" initial="hidden" whileInView="visible" viewport={{ once: true, amount: .35, margin: "0px 0px -35px 0px" }}>
-    {text.split(" ").map((word, index) => <span className="typed-word" key={index}>{Array.from(word).map((letter, letterIndex) => {
-      const delay = character++ * Math.min(.035, 2 / text.length);
-      return <motion.span key={letterIndex} variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: reduced ? 0 : .18, delay: reduced ? 0 : delay } } }}>{letter}</motion.span>;
-    })}{" "}</span>)}
-  </motion.span></span>;
+  return <motion.span key={text} className="typed-text" initial={{ opacity: reduced ? 1 : .5 }}
+    animate={{ opacity: 1 }} transition={{ duration: reduced ? 0 : .25 }}>{text}</motion.span>;
 }

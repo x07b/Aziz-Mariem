@@ -1,7 +1,8 @@
 "use client";
+import { useReducedMotion } from "@/lib/useReducedMotion";
 import Image from "next/image";
 import { useRef, type CSSProperties, type ReactNode } from "react";
-import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { eventConfig } from "@/config/event";
 import { useInvitation } from "./InvitationLanguage";
 
