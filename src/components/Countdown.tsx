@@ -2,15 +2,14 @@
 import { TypedText } from "./TypedText";
 
 import { useEffect, useState } from "react";
-import { eventConfig } from "@/config/event";
+import { eventConfig, invitationCopy } from "@/config/event";
 import { getCountdown } from "@/lib/date";
 import { Flourish } from "./Ornaments";
 import { Reveal } from "./Reveal";
-import { useInvitation } from "./InvitationLanguage";
 
 export function Countdown() {
   const [countdown, setCountdown] = useState<ReturnType<typeof getCountdown>>(null);
-  const { t } = useInvitation();
+  const t = invitationCopy.en;
   const labels = t.units;
 
   useEffect(() => {
@@ -21,7 +20,7 @@ export function Countdown() {
   }, []);
 
   return (
-    <section className="countdown section-pad" aria-labelledby="countdown-heading">
+    <section className="countdown section-pad" lang="en" dir="ltr" aria-labelledby="countdown-heading">
       <Reveal className="reading-surface">
         <h2 className="section-title" id="countdown-heading"><TypedText text={t.countdown}/></h2>
         <div

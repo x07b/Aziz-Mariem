@@ -54,15 +54,15 @@ export const MusicPlayer = forwardRef<MusicHandle, { cover: boolean; onToggle?: 
       void element.play().then(() => {
         if (request !== version.current || suspended.current || !wanted.current || document.hidden) return;
         void fade(eventConfig.music.volume, 850);
-      }).catch(() => { /* The music button provides a direct gesture to retry. */ });
+      }).catch(() => { /* The music button allows a gesture retry. */ });
     }, [cancelFade, fade]);
     const suspend = useCallback(async () => {
       suspended.current = true;
       setFilmActive(true);
-      const request = ++version.current;
-      if (audio.current && !audio.current.paused) await fade(0, 320);
-      if (request === version.current) audio.current?.pause();
-    }, [fade]);
+      ++version.current;
+      cancelFade();
+      audio.current?.pause();
+    }, [cancelFade]);
     const play = useCallback(() => {
       started.current = true;
       if (!suspended.current) resume();
@@ -100,12 +100,12 @@ export const MusicPlayer = forwardRef<MusicHandle, { cover: boolean; onToggle?: 
       }
     }
     if (!eventConfig.music.enabled || !eventConfig.music.src) return null;
-    const label = unavailable ? t.musicUnavailable : filmActive ? t.filmAudio : playing ? t.musicMute : t.musicPlay;
+    const label = unavailable ? t.musicUnavailable : filmActive ? t.voicePause : playing ? t.musicMute : t.musicPlay;
     return <>
       <audio ref={audio} src={eventConfig.music.src} loop preload="none"
         onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)}
         onError={() => { setUnavailable(true); setPlaying(false); }}/>
-      <button className={`music-button ${playing ? "is-playing" : ""} ${cover ? "is-cover" : ""}`}
+      {!cover && <button className={`music-button ${playing ? "is-playing" : ""} ${cover ? "is-cover" : ""}`}
         onClick={toggle} type="button" disabled={unavailable || filmActive}
         aria-label={label} aria-pressed={playing && !filmActive} title={label}>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.1" aria-hidden="true">
@@ -113,7 +113,7 @@ export const MusicPlayer = forwardRef<MusicHandle, { cover: boolean; onToggle?: 
           <ellipse cx="7" cy="18" rx="3" ry="2"/><ellipse cx="16" cy="16" rx="3" ry="2"/>
           {!playing && <path d="m4 3 17 18"/>}
         </svg>
-      </button>
+      </button>}
     </>;
   }
 );

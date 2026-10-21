@@ -41,6 +41,7 @@ export function VoiceMessage({ onPlay, onPause, onClose }: { onPlay: () => void;
 
   function closeMessage() {
     audio.current?.pause();
+    onPause();
     onClose();
   }
 
@@ -52,8 +53,8 @@ export function VoiceMessage({ onPlay, onPause, onClose }: { onPlay: () => void;
       onTimeUpdate={event => setCurrentTime(event.currentTarget.currentTime)}
       onLoadedMetadata={event => setDuration(event.currentTarget.duration)}
       onDurationChange={event => setDuration(event.currentTarget.duration)}
-      onEnded={() => setCurrentTime(0)}
-      onError={() => setFailed(true)}/>
+      onEnded={() => { setPlaying(false); setCurrentTime(0); onPause(); }}
+      onError={() => { setFailed(true); setPlaying(false); onPause(); }}/>
     <div className="voice-message-card">
       <div className="voice-message-heading">
         <span className="voice-message-mark" aria-hidden="true">

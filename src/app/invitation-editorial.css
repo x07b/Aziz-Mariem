@@ -101,7 +101,7 @@ body { background:#e8e6dc; color:var(--ink); font-family:"Lora",Georgia,serif; f
 .voice-message-seek:disabled { cursor:default; opacity:.45; }
 .voice-message-error { margin:14px 0 0; color:#7b4f46; font-size:12px; text-align:center; }
 .voice-message-seek:focus-visible,.voice-play-button:focus-visible,.voice-close-button:focus-visible { outline:2px solid var(--sage); outline-offset:3px; }
-.mariem-heart .editorial-photo { object-fit:contain; object-position:center !important; transform:none; background:#f6f2e9; }
+.mariem-heart .editorial-photo { object-fit:cover; object-position:45% 20% !important; transform:none; background:#f6f2e9; }
 .close-invitation { border:0; border-bottom:1px solid #c5b99990; padding:10px 4px; font-size:10px; }
 .music-button,.music-button.is-cover,.language-switch { position:fixed; top:auto; right:max(14px,env(safe-area-inset-right)); z-index:70; width:44px; height:44px; min-height:44px; display:grid; place-items:center; padding:0; border:1px solid #a1a88d90; border-radius:50%; background:#f6f2e9ed; color:var(--olive); box-shadow:none; }
 .music-button,.music-button.is-cover { bottom:calc(15px + env(safe-area-inset-bottom)); }
@@ -154,3 +154,27 @@ html[lang="ar"] .display-time { font-size:30px; }
 }
 @keyframes petals-dismiss { 0%,75% { opacity:1; } 100% { opacity:0; } }
 @media(prefers-reduced-motion:reduce) { .opening-petals { display:none; } }
+
+/* Fixed-language stationery sections remain LTR in the Arabic invitation. */
+html[lang="ar"] .cinematic-cover .cover-wordmark h1 { font-family:"Italianno",cursive; font-size:clamp(46px,6.5svh,64px); }
+html[lang="ar"] .cinematic-cover .cover-eyebrow,
+html[lang="ar"] .cinematic-cover .cover-wordmark p,
+html[lang="ar"] .cinematic-cover .cover-enter,
+html[lang="ar"] .event-details .meta,
+html[lang="ar"] .event-details .map-link,
+html[lang="ar"] .countdown .meta { font-family:var(--font-helvena),sans-serif; }
+html[lang="ar"] .cinematic-cover .cover-enter svg { transform:none; }
+html[lang="ar"] .event-details .display-date,
+html[lang="ar"] .event-details .display-time,
+html[lang="ar"] .countdown .section-title { font-family:"Cormorant Garamond",Georgia,serif; line-height:1.15; letter-spacing:-.025em; }
+html[lang="ar"] .event-details .display-date { font-size:clamp(38px,5.6vw,62px); }
+html[lang="ar"] .event-details .display-time { font-size:clamp(29px,4vw,38px); }
+html[lang="ar"] .event-details .event-detail>p { font-family:"Lora",Georgia,serif; }
+html[lang="ar"] .countdown .section-title { font-size:38px; }
+html[lang="ar"] .event-details .meta { font-size:10px; letter-spacing:.12em; }
+html[lang="ar"] .countdown .meta { font-size:9px; letter-spacing:.08em; }
+.location-card { padding:10px; border-radius:24px 24px 4px 4px; background:#faf7ef; box-shadow:0 12px 35px #57564d0a; overflow:hidden; }
+.location-toolbar { justify-content:center; padding:14px 10px 20px; }
+.gown-content .location-card .event-map { border:1px solid #c5b99970; border-radius:14px; overflow:hidden; }
+.location-directions { display:flex; justify-content:center; padding:18px 8px 10px; }
+.gown-content .location-directions .map-link { border:0; border-bottom:1px solid #a4a88e; padding:8px 4px; gap:24px; }

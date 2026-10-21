@@ -116,7 +116,7 @@ export const invitationCopy = {
     childhoodLabel: "قبل أن نلتقي…",
     celebration: "يوم {date}، نلتقي لنفرح معًا بهذا الحبّ.",
     forever: "معًا، دائمًا.", enableSound: "اسمعوا هذه اللحظة", filmUnavailable: "تعذّر تحميل هذه الذكرى الآن.", openFilm: "افتح الفيديو",
-    filmAudio: "توقّفت الموسيقى لتسمعوا حكايتنا.", languageStatus: "العربية · الانتقال إلى الإنجليزية",
+    filmAudio: "توقّفت الموسيقى لتسمعوا حكايتنا.", languageStatus: "العربية · الانتقال إلى الفرنسية",
     coverNote: "بداية عمر يجمعنا", proposalTitle: "وقالت نعم.", proposalNote: "لحظة تخصّنا، أحببنا أن نشارككم فرحتها.", proposalLabel: "أجمل نعم في حكايتنا",
     coverSubtitle: "دعوة خطوبتنا", enter: "افتح الدعوة", close: "أغلق الدعوة",
     announcement: "", introduction: "", journey: "كنّا حكايتين في علم الغيب، حتى جمعنا القدر في سطرٍ واحد.",
@@ -127,6 +127,6 @@ export const invitationCopy = {
     moments: { Welcome: "أهلًا بكم", Khotba: "الخطوبة", Photos: "ذكرياتنا", Celebrate: "نفرح معًا" } as Record<string,string>,
     scene: "بداية حكايتنا", sceneAlt: "عزيز ومريم يمسكان بأيدي بعضهما أمام باب مزخرف.",
     scroll: "تتواصل الحكاية", childhood: "ذكريات طفولتنا", azizPhoto: "عزيز في طفولته", mariemPhoto: "مريم في طفولتها",
-    musicPlay: "تشغيل الموسيقى", musicMute: "كتم الموسيقى", musicUnavailable: "الموسيقى غير متاحة", switchLanguage: "اللغة الحالية: العربية. اقرأ الدعوة بالإنجليزية.",
+    musicPlay: "تشغيل الموسيقى", musicMute: "كتم الموسيقى", musicUnavailable: "الموسيقى غير متاحة", switchLanguage: "اللغة الحالية: العربية. اقرأ الدعوة بالفرنسية.",
   },
 };
