@@ -1,4 +1,5 @@
 "use client";
+import { useAutoplayVideo } from "@/lib/useAutoplayVideo";
 import { useReducedMotion } from "@/lib/useReducedMotion";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
@@ -11,14 +12,10 @@ export function IntroEnvelope({ onOpen, onComplete, mediaPaused = false }: { onO
   const t = invitationCopy.fr;
   const [failed, setFailed] = useState(false);
   const opened = useRef(false);
-  const video = useRef<HTMLVideoElement>(null);
+  const video = useAutoplayVideo(!mediaPaused && !failed);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const reduced = useReducedMotion();
   useEffect(() => () => { if (timer.current) clearTimeout(timer.current); }, []);
-  useEffect(() => {
-    if (mediaPaused) video.current?.pause();
-    else void video.current?.play().catch(() => { /* Keep the poster if autoplay is blocked. */ });
-  }, [mediaPaused]);
   function open() {
     if (opened.current) return;
     opened.current = true;

@@ -26,13 +26,25 @@ for (const width of [320, 390, 768, 1440]) {
     await page.screenshot({ path: `test-results/cover-${width}.png` });
     await page.locator(".intro-open-button").click();
     await expect(page.locator(".intro")).toHaveCount(0);
+    const sceneVideo = page.locator(".doorway-image video");
+    await expect(sceneVideo).toHaveAttribute("src", "/videos/couple-walking-doors.mp4");
+    await expect(sceneVideo).toHaveJSProperty("muted", true);
+    await expect(sceneVideo).toHaveJSProperty("loop", true);
+    await expect(sceneVideo).toHaveJSProperty("playbackRate", 0.65);
+    await expect(sceneVideo).toHaveCSS("object-fit", "cover");
+    await expect(page.locator(".doorway-image")).toHaveCSS("mask-image", /linear-gradient/);
+    await expect(page.locator(".doorway-image")).toHaveCSS("border-radius", /48%/);
     for (const lang of ["ar", "fr"] as const) {
       await expect(page.locator("html")).toHaveAttribute("lang", lang);
       await expect(page.locator(".love-letter p")).toHaveText(invitationCopy[lang].loveLetter.split("\n\n"));
       await expect(page.locator(".celebration-note,.proposal-note,#proposal-heading")).toHaveCount(0);
-      await expect(page.locator(".display-date")).toHaveText("24 octobre 2026");
+      await expect(page.locator(".event-datetime .display-date")).toHaveText("24 octobre 2026");
       await expect(page.locator(".display-time")).toHaveText("20:00");
-      await expect(page.locator(".event-details")).toContainText("Ras Ettabia");
+      await expect(page.locator(".event-details")).not.toContainText("Ras Ettabia");
+      await expect(page.locator(".event-details")).toContainText("Bardo");
+      await expect(page.locator(".event-detail:not(.event-datetime) .display-date")).toHaveText("Bardo");
+      await expect(page.locator(".location-caption")).toHaveCount(0);
+      await expect(page.locator(".map-link")).toHaveAttribute("href", eventConfig.event.locations[0].googleMapsUrl ?? "");
       await expect(page.locator("#countdown-heading")).toHaveText("Together, very soon.");
       for (const section of await page.locator(".gown-content > section").all()) {
         await section.scrollIntoViewIfNeeded();
