@@ -16,6 +16,9 @@ for (const width of [320, 390, 768, 1440]) {
     await page.addInitScript(() => localStorage.setItem("invitation-language", "en"));
     await page.route("https://www.google.com/maps/**", route => route.fulfill({ body: "Map preview" }));
     await page.goto("/");
+    await expect(page.locator('meta[property="og:image"]')).toHaveAttribute("content", /\/images\/social-preview\.png$/);
+    await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute("content", "summary_large_image");
+    await expect(page.locator('meta[name="twitter:image"]')).toHaveAttribute("content", /\/images\/social-preview\.png$/);
     await expect(page.locator("html")).toHaveAttribute("lang", "ar");
     await expect(page.locator(".cover-film")).toHaveJSProperty("paused", false);
     await expect(page.locator(".cover-film")).toHaveJSProperty("muted", true);

@@ -14,6 +14,10 @@ npm run build
 npm run start -- --port 3001
 ```
 
+## Link preview image
+
+The supplied invitation artwork is used for Open Graph and large Twitter card previews. Vercel production and preview deployments use their deployment URL automatically. For other hosting providers, set `NEXT_PUBLIC_SITE_URL` to the public site origin, including `https://` (for example, `https://invitation.example.com`), so share metadata contains absolute URLs to the site and image. Social platforms may cache link previews; after updating the image or metadata, use the platform's sharing debugger or wait for its cache to refresh. Instagram does not display link preview cards in captions or bio links.
+
 ## Post-opening gown story
 
 `src/components/GownStory.tsx` wraps the invitation, childhood lockets, event details/map, timeline, countdown and footer. The invitation body switches between French and English. The Quran verse above the couple always remains in Arabic. Every section and the footer is transparent over the same continuous fabric surface. The event information and section order are unchanged.
