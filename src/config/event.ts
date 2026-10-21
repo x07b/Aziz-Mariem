@@ -32,7 +32,8 @@ export const eventConfig = {
   proposal: { src: "/videos/proposal.mp4", poster: "/videos/proposal-poster.jpg" },
   cover: { poster: "/videos/cover-poster.jpg", subtitle: "Fête de fiançailles", button: "Ouvrir l’invitation" },
   // Replace this file with your preferred track when ready.
-  music: { src: "/music/song.wav", coverSrc: "/music/cover-golden-brown.mp3", enabled: true, volume: 0.65, fadeDuration: 1800 },
+  // Cover audio is attenuated in the file itself, including on mobile browsers that ignore volume changes.
+  music: { src: "/music/song.wav", coverSrc: "/music/cover-golden-brown-soft.mp3", enabled: true, volume: 0.65, fadeDuration: 1800 },
   contact: { phone: null as string | null },
   photos: {
     hero: { src: "/images/couple-hero.jpg", alt: "لحظة هادئة معًا — صورة توضيحية", position: "center 45%" },
@@ -65,7 +66,7 @@ export const eventConfig = {
   },
 };
 export const coupleNames = `${eventConfig.couple.firstPerson} & ${eventConfig.couple.secondPerson}`;
-export const invitationNames = `${eventConfig.couple.secondPerson} & ${eventConfig.couple.firstPerson}`;
+export const invitationNames = coupleNames;
 export type InvitationLanguage = "fr" | "en" | "ar";
 const { firstPerson: aziz, secondPerson: mariem } = eventConfig.couple;
 export const invitationCopy = {

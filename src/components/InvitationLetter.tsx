@@ -9,7 +9,7 @@ export function InvitationLetter() {
     <Branch className="letter-botanical botanical-left"/><Branch className="letter-botanical botanical-right"/>
     <div className="letter-content bilingual-letter reading-surface">
       <Reveal><Flourish/><div className="love-letter">{t.loveLetter.split("\n\n").map(paragraph => <p key={paragraph}>{paragraph}</p>)}</div></Reveal>
-      <Reveal className="letter-signoff"><p className="script letter-names">{language === "ar" ? "مريم وعزيز" : "Mariem & Aziz"}</p></Reveal>
+      <Reveal className="letter-signoff"><p className="script letter-names">{language === "ar" ? "عزيز ومريم" : "Aziz & Mariem"}</p></Reveal>
     </div>
   </section>;
 }

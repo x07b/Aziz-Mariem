@@ -33,7 +33,7 @@ export function IntroEnvelope({ onOpen, onComplete, mediaPaused = false }: { onO
       {eventConfig.introVideoSrc && !failed && <video ref={video} className="cover-film" src={eventConfig.introVideoSrc} poster={eventConfig.cover.poster} autoPlay={!mediaPaused} muted loop playsInline preload="auto" aria-hidden="true" onError={()=>setFailed(true)}/>}
       <motion.div className="cover-wordmark" initial={{ opacity: 0 }} animate={{ opacity: opening ? 0 : 1 }} transition={{ duration: reduced ? .15 : 1.2 }}>
         <span className="cover-eyebrow">{t.coverSubtitle}</span>
-        <h1 className="script" lang="fr" dir="ltr"><span>{eventConfig.couple.secondPerson}</span><i>&amp;</i><span>{eventConfig.couple.firstPerson}</span></h1>
+        <h1 className="script" lang="fr" dir="ltr"><span>{eventConfig.couple.firstPerson}</span><i>&amp;</i><span>{eventConfig.couple.secondPerson}</span></h1>
         <p lang="fr">{t.coverNote}</p>
       </motion.div>
       <motion.button autoFocus type="button" className="intro-open-button cover-enter" onClick={open} disabled={opening} aria-disabled={opening} animate={{ opacity: opening ? 0 : 1 }} lang="fr"><span>{t.enter}</span><svg viewBox="0 0 32 16" fill="none" stroke="currentColor" aria-hidden="true"><path d="M1 8h28m-7-6 7 6-7 6"/></svg></motion.button>

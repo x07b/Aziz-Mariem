@@ -22,3 +22,17 @@
 .cover-wordmark h1 { font-size:clamp(46px,6.5svh,64px); color:#35412e; }
 .cover-eyebrow { font-size:11px; letter-spacing:.18em; color:#4b513c; }
 .cover-wordmark p { font-size:13px; color:#35412e; }
+
+/* Italic serif names echo the engraved stationery and antique frame. */
+.cover-stage { container-type:inline-size; }
+.intro.cinematic-cover .cover-wordmark h1 {
+  font-family:"Cormorant Garamond",Georgia,serif;
+  font-style:italic;
+  font-weight:400;
+  font-size:clamp(30px,10cqw,52px);
+  line-height:1.2;
+  letter-spacing:-.025em;
+  gap:.18em;
+  white-space:nowrap;
+}
+.intro.cinematic-cover .cover-wordmark h1 i { font-size:.7em; }

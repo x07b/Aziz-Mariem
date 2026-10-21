@@ -38,7 +38,7 @@ function Experience() {
     setEntered(false);
   }
   return <MotionConfig reducedMotion="user">
-    <OpeningPetals started={petalsStarted}/>
+    {entered && <OpeningPetals started={petalsStarted}/>}
     {entered && <LanguageSwitch/>}
     <MusicPlayer ref={music} cover={!entered}/>
     <AnimatePresence onExitComplete={()=>{setUnlocked(true); invitation.current?.focus({preventScroll:true});}}>

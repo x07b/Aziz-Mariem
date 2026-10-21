@@ -75,6 +75,8 @@ test("cover track switches immediately, film stays muted, and voice message is r
   await film.scrollIntoViewIfNeeded();
   await expect(film).toHaveJSProperty("paused", false);
   await expect(film).toHaveJSProperty("muted", true);
+  await expect(page.locator(".proposal-frame-art")).toBeVisible();
+  await expect(page.locator(".proposal-playback")).toHaveCount(0);
   await expect(music).toHaveJSProperty("paused", false);
   await page.locator(".music-button").click();
   await expect(music).toHaveJSProperty("paused", true);
@@ -136,4 +138,19 @@ test("Golden Brown autoplays when browser policy permits sound", async () => {
   } finally {
     await browser.close();
   }
+});
+
+test("petals return as a gentle decoration and stop when closing or reducing motion", async ({ page }) => {
+  await open(page);
+  await expect(page.locator(".opening-petal")).toHaveCount(14);
+  await expect(page.locator(".ambient-petal")).toHaveCount(7, { timeout: 12000 });
+  await expect(page.locator(".ambient-petals")).toHaveCSS("pointer-events", "none");
+  await expect(page.locator(".ambient-petal").first()).toHaveCSS("animation-delay", "12s");
+  await expect(page.locator(".ambient-petal").first()).toHaveCSS("animation-iteration-count", "infinite");
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await expect(page.locator(".ambient-petals,.opening-petals")).toHaveCount(0);
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await expect(page.locator(".ambient-petal")).toHaveCount(7);
+  await page.locator(".close-invitation").click();
+  await expect(page.locator(".ambient-petals,.opening-petals")).toHaveCount(0);
 });

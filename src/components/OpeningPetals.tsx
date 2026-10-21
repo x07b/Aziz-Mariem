@@ -2,7 +2,7 @@
 import { useEffect, useState, type CSSProperties } from "react";
 import { useReducedMotion } from "@/lib/useReducedMotion";
 
-/** Deterministic, single-use decoration; never participates in focus or pointer input. */
+/** Opening shower followed by sparse, delayed petals; never intercepts interaction. */
 export function OpeningPetals({ started }: { started: boolean }) {
   const reduced = useReducedMotion();
   const [finished, setFinished] = useState(false);
@@ -11,7 +11,16 @@ export function OpeningPetals({ started }: { started: boolean }) {
     const timer = setTimeout(() => setFinished(true), 9500);
     return () => clearTimeout(timer);
   }, [started]);
-  if (!started || finished || reduced) return null;
+  if (!started || reduced) return null;
+  if (finished) return <div className="ambient-petals" aria-hidden="true">
+    {Array.from({ length: 7 }, (_, index) => <span key={index} className="ambient-petal" style={{
+      left: `${7 + (index * 31) % 86}%`,
+      "--petal-size": `${7 + index % 3 * 2}px`,
+      "--petal-drift": `${(index % 2 ? 1 : -1) * (30 + index * 7)}px`,
+      "--petal-turn": `${100 + index * 43}deg`,
+      "--petal-delay": `${12 + index * 1.8}s`,
+    } as CSSProperties}/>)}
+  </div>;
   return <div className="opening-petals" aria-hidden="true">
     {Array.from({ length: 14 }, (_, index) => <span key={index} className="opening-petal" style={{
       left: `${4 + (index * 29) % 92}%`,
