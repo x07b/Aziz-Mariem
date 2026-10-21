@@ -1,5 +1,5 @@
-﻿import { test, expect, type Page } from "@playwright/test";
-import { invitationCopy } from "../src/config/event";
+import { test, expect, chromium, type Page } from "@playwright/test";
+import { eventConfig, invitationCopy } from "../src/config/event";
 
 async function open(page: Page) {
   await page.route("https://www.google.com/maps/**", route => route.fulfill({ body: "Map preview" }));
@@ -20,7 +20,8 @@ for (const width of [320, 390, 768, 1440]) {
     await expect(page.locator(".cover-film")).toHaveJSProperty("paused", false);
     await expect(page.locator(".cover-film")).toHaveJSProperty("muted", true);
     await expect(page.locator(".cover-eyebrow")).toHaveText(invitationCopy.fr.coverSubtitle);
-    await expect(page.locator(".music-button,.language-switch")).toHaveCount(0);
+    await expect(page.locator(".language-switch")).toHaveCount(0);
+    await expect(page.locator(".music-button.is-cover")).toBeVisible();
     await expect(page.locator(".cover-wordmark")).toHaveCSS("opacity", "1");
     await page.screenshot({ path: `test-results/cover-${width}.png` });
     await page.locator(".intro-open-button").click();
@@ -42,48 +43,78 @@ for (const width of [320, 390, 768, 1440]) {
     }
     await page.locator(".close-invitation").click();
     await expect(page.locator(".intro")).toBeVisible();
-    await expect(page.locator(".music-button,.language-switch")).toHaveCount(0);
+    await expect(page.locator(".language-switch")).toHaveCount(0);
+    await expect(page.locator(".music-button.is-cover")).toBeVisible();
     await page.reload();
     await expect(page.locator("html")).toHaveAttribute("lang", "ar");
     expect(errors).toEqual([]);
   });
 }
 
-test("only the hidden voice message interrupts music", async ({ page }) => {
+test("cover track switches immediately, film stays muted, and voice message is removed", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await open(page);
-  const music = page.locator("audio").first();
+  await page.goto("/");
+  const music = page.locator("audio");
+  await expect(music).toHaveCount(1);
+  await expect(music).toHaveAttribute("src", eventConfig.music.coverSrc);
+  await page.locator(".cover-eyebrow").click();
+  await expect(music).toHaveJSProperty("paused", false);
+  await page.locator(".music-button").click();
+  await expect(music).toHaveJSProperty("paused", true);
+  await expect(page.locator(".music-button")).toHaveAttribute("aria-pressed", "false");
+  await page.locator(".cover-eyebrow").click();
+  await expect(music).toHaveJSProperty("paused", true);
+  await page.locator(".music-button").click();
+  await expect(music).toHaveJSProperty("paused", false);
+  await page.locator(".intro-open-button").click();
+  await expect(music).toHaveAttribute("src", "/music/song.wav");
+  await expect(music).toHaveJSProperty("paused", false);
+  await expect(page.locator(".intro")).toHaveCount(0);
+  await expect(page.locator(".mariem-gift,.monogram-trigger")).toHaveCount(0);
   const film = page.locator(".proposal-frame video");
   await film.scrollIntoViewIfNeeded();
   await expect(film).toHaveJSProperty("paused", false);
   await expect(film).toHaveJSProperty("muted", true);
   await expect(music).toHaveJSProperty("paused", false);
-  await expect(page.locator(".mariem-gift")).toHaveCount(0);
-  await page.locator(".monogram-trigger").click();
-  const voice = page.locator(".mariem-gift audio");
-  await expect(voice).toHaveJSProperty("paused", true);
-  await expect(music).toHaveJSProperty("paused", false);
-  await page.locator(".voice-play-button").click();
-  await expect(voice).toHaveJSProperty("paused", false);
-  await expect(music).toHaveJSProperty("paused", true);
-  await film.scrollIntoViewIfNeeded();
-  await expect(music).toHaveJSProperty("paused", true);
-  await page.locator(".voice-play-button").click();
-  await expect(music).toHaveJSProperty("paused", false);
-  await page.locator(".voice-play-button").click();
-  await page.locator(".voice-close-button").click();
-  await expect(music).toHaveJSProperty("paused", false);
-  await expect(page.locator(".mariem-gift")).toHaveCount(0);
   await page.locator(".music-button").click();
-  await film.scrollIntoViewIfNeeded();
-  await expect(music).toHaveJSProperty("paused", true);
-  await page.locator(".music-button").click();
-  await page.locator(".monogram-trigger").click();
-  await page.locator(".voice-play-button").click();
   await expect(music).toHaveJSProperty("paused", true);
   await page.locator(".close-invitation").click();
-  await expect(page.locator(".intro")).toBeVisible();
+  await expect(music).toHaveAttribute("src", eventConfig.music.coverSrc);
   await expect(music).toHaveJSProperty("paused", false);
+  await page.locator(".intro-open-button").click();
+  await expect(music).toHaveAttribute("src", "/music/song.wav");
+  await expect(music).toHaveJSProperty("paused", false);
+});
+
+test("blocked cover autoplay retries on a touch without delaying opening", async ({ page }) => {
+  await page.addInitScript(() => {
+    const play = HTMLMediaElement.prototype.play;
+    HTMLMediaElement.prototype.play = function () {
+      if (this instanceof HTMLAudioElement && !navigator.userActivation.hasBeenActive)
+        return Promise.reject(new DOMException("Gesture required", "NotAllowedError"));
+      return play.call(this);
+    };
+  });
+  await page.goto("/");
+  await expect(page.locator("audio")).toHaveJSProperty("paused", true);
+  await page.locator(".cover-eyebrow").click();
+  await expect(page.locator("audio")).toHaveJSProperty("paused", false);
+  await page.locator(".intro-open-button").click();
+  await expect(page.locator("audio")).toHaveAttribute("src", "/music/song.wav");
+  await expect(page.locator("audio")).toHaveJSProperty("paused", false);
+});
+
+test("cover fills a changing mobile viewport and hides all invitation content", async ({ page }) => {
+  await page.goto("/");
+  for (const height of [650, 844, 932, 650]) {
+    await page.setViewportSize({ width: 390, height });
+    await expect(page.locator(".site-content")).toBeHidden();
+    await expect.poll(() => page.locator(".cinematic-cover").evaluate(el => Math.round(el.getBoundingClientRect().height))).toBe(height);
+    await page.mouse.wheel(0, 700);
+    expect(await page.evaluate(() => scrollY)).toBe(0);
+  }
+  await page.locator(".intro-open-button").click();
+  await expect(page.locator(".site-content")).toBeVisible();
 });
 
 test("failed film leaves the music playing", async ({ page }) => {
@@ -92,4 +123,17 @@ test("failed film leaves the music playing", async ({ page }) => {
   await page.locator(".proposal-frame").scrollIntoViewIfNeeded();
   await expect(page.locator(".film-status")).toBeVisible();
   await expect(page.locator("audio")).toHaveJSProperty("paused", false);
+});
+
+test("Golden Brown autoplays when browser policy permits sound", async () => {
+  const browser = await chromium.launch({ args: ["--autoplay-policy=no-user-gesture-required"] });
+  try {
+    const page = await browser.newPage();
+    await page.goto("http://localhost:3001");
+    await expect(page.locator("audio")).toHaveAttribute("src", eventConfig.music.coverSrc);
+    await expect(page.locator("audio")).toHaveJSProperty("paused", false);
+    await expect.poll(() => page.locator("audio").evaluate((audio: HTMLAudioElement) => audio.currentTime)).toBeGreaterThan(0);
+  } finally {
+    await browser.close();
+  }
 });

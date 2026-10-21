@@ -68,39 +68,7 @@ body { background:#e8e6dc; color:var(--ink); font-family:"Lora",Georgia,serif; f
 .film-status { font-size:13px; margin:16px auto; max-width:400px; }.film-status a { text-decoration:underline; text-underline-offset:4px; }
 .proposal-signature { font-size:30px; margin:25px auto 0; }
 .gown-content>.site-footer { padding:24px 20px 55px; }
-.gift-reveal { min-height:122px; display:grid; place-items:center; margin-bottom:12px; }
-.monogram-trigger { display:grid; width:112px; height:122px; place-items:center; padding:0; border:0; background:transparent; cursor:pointer; }
-.site-footer .monogram { width:94px; height:100px; margin:0 auto; transition:transform .25s ease; }.site-footer .monogram svg{height:90px;width:48px}.site-footer .monogram>span{font-size:26px}
-.monogram-trigger:hover .monogram { transform:scale(1.05); }
-.monogram-trigger:focus-visible { outline:1px solid var(--sage); outline-offset:3px; }
-.mariem-gift { width:min(100%,390px); margin:0 auto; }
-.voice-message-audio { display:none; }
-.voice-message-card { padding:19px 20px 16px; border:1px solid #c5b999a8; background:linear-gradient(145deg,#faf7ef 0%,#f1ecdf 100%); box-shadow:0 8px 24px #4d493214; }
-.voice-message-heading { display:flex; align-items:center; gap:13px; text-align:start; }
-.voice-message-mark { display:grid; width:42px; height:42px; flex:none; place-items:center; border:1px solid #c5b999a8; border-radius:50%; color:var(--olive); background:#f8f5ed; }
-.voice-message-mark svg { width:25px; height:25px; stroke:currentColor; stroke-width:1.15; stroke-linecap:round; stroke-linejoin:round; }
-.voice-message-copy { flex:1; min-width:0; }
-.voice-message-copy .meta { margin:0 0 4px; font-size:9px; letter-spacing:.16em; }
-.voice-message-note { margin:0; color:#777566; font-family:var(--font-serif); font-size:15px; font-style:italic; line-height:1.4; }
-.voice-play-button { display:grid; width:42px; height:42px; flex:none; place-items:center; padding:0; border:0; border-radius:50%; color:#f6f2e9; background:var(--olive); transition:transform .2s,background .2s; }
-.voice-close-button { display:grid; width:32px; height:32px; flex:none; place-items:center; padding:0; border:1px solid #c5b999a8; border-radius:50%; color:#727960; background:transparent; }
-.voice-close-button:hover { color:var(--burgundy); border-color:var(--burgundy); }
-.voice-close-button svg { width:15px; height:15px; fill:none; stroke:currentColor; stroke-width:1.4; stroke-linecap:round; }
-.voice-play-button:hover:not(:disabled) { transform:scale(1.05); background:#687052; }
-.voice-play-button:disabled { opacity:.55; }
-.voice-play-button svg { width:19px; height:19px; fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }
-.voice-message-progress { display:grid; grid-template-columns:34px minmax(0,1fr) 34px; align-items:center; gap:10px; margin:17px 2px 0; direction:ltr; }
-.voice-message-time { color:#777566; font-family:var(--font-helvena),sans-serif; font-size:10px; font-variant-numeric:tabular-nums; }
-.voice-message-time:last-child { text-align:end; }
-.voice-message-seek { width:100%; height:18px; margin:0; appearance:none; background:transparent; cursor:pointer; }
-.voice-message-seek::-webkit-slider-runnable-track { height:2px; background:linear-gradient(to right,var(--olive) 0 var(--voice-progress,0%),#c5b999 0 100%); }
-.voice-message-seek::-moz-range-track { height:2px; background:#c5b999; }
-.voice-message-seek::-moz-range-progress { height:2px; background:var(--olive); }
-.voice-message-seek::-webkit-slider-thumb { width:10px; height:10px; margin-top:-4px; appearance:none; border:1px solid var(--paper); border-radius:50%; background:var(--olive); box-shadow:0 0 0 1px var(--olive); }
-.voice-message-seek::-moz-range-thumb { width:8px; height:8px; border:1px solid var(--paper); border-radius:50%; background:var(--olive); box-shadow:0 0 0 1px var(--olive); }
-.voice-message-seek:disabled { cursor:default; opacity:.45; }
-.voice-message-error { margin:14px 0 0; color:#7b4f46; font-size:12px; text-align:center; }
-.voice-message-seek:focus-visible,.voice-play-button:focus-visible,.voice-close-button:focus-visible { outline:2px solid var(--sage); outline-offset:3px; }
+.site-footer .monogram { width:94px; height:100px; margin:0 auto 12px; }
 .mariem-heart .editorial-photo { object-fit:cover; object-position:45% 20% !important; transform:none; background:#f6f2e9; }
 .close-invitation { border:0; border-bottom:1px solid #c5b99990; padding:10px 4px; font-size:10px; }
 .music-button,.music-button.is-cover,.language-switch { position:fixed; top:auto; right:max(14px,env(safe-area-inset-right)); z-index:70; width:44px; height:44px; min-height:44px; display:grid; place-items:center; padding:0; border:1px solid #a1a88d90; border-radius:50%; background:#f6f2e9ed; color:var(--olive); box-shadow:none; }

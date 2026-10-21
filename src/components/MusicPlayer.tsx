@@ -1,119 +1,95 @@
 ﻿"use client";
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
-import { eventConfig } from "@/config/event";
+import { eventConfig, invitationCopy } from "@/config/event";
 import { useInvitation } from "./InvitationLanguage";
 
-export type MusicHandle = { play: () => void; suspend: () => Promise<void>; resume: () => void };
+export type MusicHandle = { play: () => void; playCover: () => void };
 
-/** One audio element; guest preference survives temporary film and visibility pauses. */
-export const MusicPlayer = forwardRef<MusicHandle, { cover: boolean; onToggle?: (paused: boolean) => void }>(
-  function MusicPlayer({ cover, onToggle }, ref) {
+/** Reuse one audio element so the two tracks can never overlap. */
+export const MusicPlayer = forwardRef<MusicHandle, { cover: boolean }>(
+  function MusicPlayer({ cover }, ref) {
     const audio = useRef<HTMLAudioElement>(null);
+    const track = useRef<"cover" | "invitation">("cover");
     const wanted = useRef(true);
-    const started = useRef(false);
-    const suspended = useRef(false);
-    const version = useRef(0);
-    const animation = useRef(0);
-    const finishFade = useRef<(() => void) | null>(null);
     const [playing, setPlaying] = useState(false);
-    const [filmActive, setFilmActive] = useState(false);
     const [unavailable, setUnavailable] = useState(false);
     const { t } = useInvitation();
-    const invalidate = useCallback(() => { ++version.current; }, []);
-    const cancelFade = useCallback(() => {
-      cancelAnimationFrame(animation.current);
-      finishFade.current?.();
-      finishFade.current = null;
-    }, []);
-    const fade = useCallback((target: number, duration: number) => {
-      cancelFade();
-      const element = audio.current;
-      if (!element) return Promise.resolve();
-      const from = element.volume;
-      const start = performance.now();
-      return new Promise<void>(resolve => {
-        finishFade.current = resolve;
-        const frame = (time: number) => {
-          const progress = Math.max(0, Math.min((time - start) / duration, 1));
-          // iOS may ignore volume changes; pause still guarantees exclusive audio.
-          element.volume = from + (target - from) * progress;
-          if (progress < 1) animation.current = requestAnimationFrame(frame);
-          else { finishFade.current = null; resolve(); }
-        };
-        animation.current = requestAnimationFrame(frame);
-      });
-    }, [cancelFade]);
+
     const resume = useCallback(() => {
-      suspended.current = false;
-      setFilmActive(false);
       const element = audio.current;
-      if (!element || !started.current || !wanted.current || document.hidden) return;
-      const request = ++version.current;
-      cancelFade();
-      element.volume = 0;
-      void element.play().then(() => {
-        if (request !== version.current || suspended.current || !wanted.current || document.hidden) return;
-        void fade(eventConfig.music.volume, 850);
-      }).catch(() => { /* The music button allows a gesture retry. */ });
-    }, [cancelFade, fade]);
-    const suspend = useCallback(async () => {
-      suspended.current = true;
-      setFilmActive(true);
-      ++version.current;
-      cancelFade();
-      audio.current?.pause();
-    }, [cancelFade]);
-    const play = useCallback(() => {
-      started.current = true;
-      if (!suspended.current) resume();
+      if (!element || !wanted.current || document.hidden) return;
+      element.volume = eventConfig.music.volume;
+      void element.play().catch(() => { /* Retry from a visitor gesture when autoplay is blocked. */ });
+    }, []);
+
+    const selectTrack = useCallback((next: "cover" | "invitation") => {
+      const element = audio.current;
+      if (!element) return;
+      element.pause();
+      track.current = next;
+      element.src = next === "cover" ? eventConfig.music.coverSrc : eventConfig.music.src;
+      element.load();
+      wanted.current = true;
+      setUnavailable(false);
+      // Called directly in the opening/closing click to preserve mobile user activation.
+      resume();
     }, [resume]);
-    useImperativeHandle(ref, () => ({ play, suspend, resume }), [play, suspend, resume]);
+
+    useImperativeHandle(ref, () => ({
+      play: () => selectTrack("invitation"),
+      playCover: () => selectTrack("cover"),
+    }), [selectTrack]);
+
     useEffect(() => {
       const element = audio.current;
-      const visibility = () => {
-        if (document.hidden) {
-          ++version.current;
-          cancelFade();
-          element?.pause();
-        } else if (!suspended.current) resume();
+      resume();
+      const gesture = (event: Event) => {
+        if (track.current !== "cover" || !element?.paused) return;
+        if (event.target instanceof Element && event.target.closest(".intro-open-button,.music-button")) return;
+        resume();
       };
+      const visibility = () => {
+        if (document.hidden) element?.pause();
+        else resume();
+      };
+      document.addEventListener("click", gesture);
+      document.addEventListener("touchend", gesture);
+      document.addEventListener("keydown", gesture);
       document.addEventListener("visibilitychange", visibility);
       return () => {
-        invalidate();
-        cancelFade();
         element?.pause();
+        document.removeEventListener("click", gesture);
+        document.removeEventListener("touchend", gesture);
+        document.removeEventListener("keydown", gesture);
         document.removeEventListener("visibilitychange", visibility);
       };
-    }, [cancelFade, resume, invalidate]);
+    }, [resume]);
+
     function toggle() {
-      if (playing) {
+      if (!audio.current?.paused) {
         wanted.current = false;
-        ++version.current;
-        cancelFade();
         audio.current?.pause();
-        onToggle?.(true);
       } else {
         wanted.current = true;
-        started.current = true;
-        onToggle?.(false);
         resume();
       }
     }
-    if (!eventConfig.music.enabled || !eventConfig.music.src) return null;
-    const label = unavailable ? t.musicUnavailable : filmActive ? t.voicePause : playing ? t.musicMute : t.musicPlay;
+    if (!eventConfig.music.enabled) return null;
+    const labels = cover ? invitationCopy.fr : t;
+    const label = unavailable ? labels.musicUnavailable : playing ? labels.musicMute : labels.musicPlay;
     return <>
-      <audio ref={audio} src={eventConfig.music.src} loop preload="none"
+      <audio ref={audio} src={eventConfig.music.coverSrc} loop preload="auto"
         onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)}
         onError={() => { setUnavailable(true); setPlaying(false); }}/>
-      {!cover && <button className={`music-button ${playing ? "is-playing" : ""} ${cover ? "is-cover" : ""}`}
-        onClick={toggle} type="button" disabled={unavailable || filmActive}
-        aria-label={label} aria-pressed={playing && !filmActive} title={label}>
+      <button className={`music-button ${cover ? "is-cover" : ""} ${playing ? "is-playing" : ""}`} lang={cover ? "fr" : undefined}
+        onClick={toggle} type="button" disabled={unavailable}
+        aria-label={label} aria-pressed={playing} title={label}>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.1" aria-hidden="true">
           <path d="M10 17V6l9-2v11M10 9l9-2"/>
           <ellipse cx="7" cy="18" rx="3" ry="2"/><ellipse cx="16" cy="16" rx="3" ry="2"/>
           {!playing && <path d="m4 3 17 18"/>}
         </svg>
-      </button>}
+      </button>
     </>;
   }
 );
